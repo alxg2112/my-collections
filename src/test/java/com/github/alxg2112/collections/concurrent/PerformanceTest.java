@@ -49,10 +49,10 @@ public class PerformanceTest {
 		long blockingRingBufferBenchmark = benchmark.benchmark(blockingRingBuffer);
 		long atomicRingBufferBenchmark = benchmark.benchmark(atomicRingBuffer);
 		System.out.printf(benchmark + "%n"
-						+ "LinkedBlockingQueue: %s%n"
-						+ "ArrayBlockingQueue: %s%n"
-						+ "BlockingRingBuffer: %s%n"
-						+ "AtomicRingBuffer: %s%n%n",
+						+ "LinkedBlockingQueue: %sms%n"
+						+ "ArrayBlockingQueue: %sms%n"
+						+ "BlockingRingBuffer: %sms%n"
+						+ "AtomicRingBuffer: %sms%n%n",
 				linkedBlockingQueueBenchmark,
 				arrayBlockingQueueBenchmark,
 				blockingRingBufferBenchmark,
