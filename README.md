@@ -6,7 +6,7 @@ Some collections implementations (including concurrent ones), made just for fun.
 ### Thread safe
 | Collection | Description |
 | ------ | ------ |
-| `AtomicRingBuffer` | Lock-free [ring buffer] implementation. Has decent performance-to-memory footpring ratio.|
+| `AtomicRingBuffer` | Lock-free [ring buffer] implementation. Has decent performance-to-memory footprint ratio.|
 | `BlockingRingBuffer` | Old school blocking implementation of [ring buffer]. Shows better performance than `ArrayBlockingQueue` and `LinkedBlockingQueue` when capacity is big enough. |
 #### Benchmark
 ```
