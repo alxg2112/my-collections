@@ -25,13 +25,7 @@ public class Benchmark {
 		this.size = size;
 	}
 
-	public long benchmark(ConcurrentBuffer<Object> buffer, String implementationName) throws ExecutionException, InterruptedException {
-		System.out.printf("====================[Testing %s]====================%n" +
-						"Consumers: %s%n" +
-						"Producers: %s%n" +
-						"Elements per producer: %s%n" +
-						"Buffer size: %s%n%n",
-				implementationName, numberOfConsumers, numberOfProducers, elementsPerProducer, size);
+	public long benchmark(ConcurrentBuffer<Object> buffer) throws ExecutionException, InterruptedException {
 		CountDownLatch leftToConsumeLatch = new CountDownLatch(elementsPerProducer * numberOfProducers);
 		ExecutorService executorService = Executors.newFixedThreadPool(numberOfProducers + numberOfConsumers);
 		Runnable producer = () -> {
@@ -54,17 +48,21 @@ public class Benchmark {
 				leftToConsumeLatch.countDown();
 			}
 		};
-		System.out.printf("Starting...%n%n");
 		long start = System.currentTimeMillis();
 		IntStream.range(0, numberOfProducers).forEach(num -> executorService.submit(producer));
 		IntStream.range(0, numberOfConsumers).forEach(num -> executorService.submit(consumer));
 		leftToConsumeLatch.await();
 		executorService.shutdownNow();
-		long timeElapsed = System.currentTimeMillis() - start;
-		System.out.printf("Time elapsed to produce and consume %s elements is %s millis%n" +
-						"======================================================================%n%n",
-				elementsPerProducer * numberOfProducers,
-				timeElapsed);
-		return timeElapsed;
+		return System.currentTimeMillis() - start;
+	}
+
+	@Override
+	public String toString() {
+		return "Benchmark{" +
+				"numberOfProducers=" + numberOfProducers +
+				", numberOfConsumers=" + numberOfConsumers +
+				", elementsPerProducer=" + elementsPerProducer +
+				", size=" + size +
+				'}';
 	}
 }

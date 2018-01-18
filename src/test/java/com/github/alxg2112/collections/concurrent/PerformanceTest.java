@@ -44,9 +44,18 @@ public class PerformanceTest {
 
 	@Test
 	public void performanceTest() throws ExecutionException, InterruptedException {
-		long linkedBlockingQueueBenchmark = benchmark.benchmark(adaptedLinkedBlockingQueue, "LinkedBlockingQueue");
-		long arrayBlockingQueueBenchmark = benchmark.benchmark(adaptedArrayBlockingQueue, "ArrayBlockingQueue");
-		long blockingRingBufferBenchmark = benchmark.benchmark(blockingRingBuffer, "BlockingRingBuffer");
-		long atomicRingBufferBenchmark = benchmark.benchmark(atomicRingBuffer, "AtomicRingBuffer");
+		long linkedBlockingQueueBenchmark = benchmark.benchmark(adaptedLinkedBlockingQueue);
+		long arrayBlockingQueueBenchmark = benchmark.benchmark(adaptedArrayBlockingQueue);
+		long blockingRingBufferBenchmark = benchmark.benchmark(blockingRingBuffer);
+		long atomicRingBufferBenchmark = benchmark.benchmark(atomicRingBuffer);
+		System.out.printf(benchmark + "%n"
+						+ "LinkedBlockingQueue: %s%n"
+						+ "ArrayBlockingQueue: %s%n"
+						+ "BlockingRingBuffer: %s%n"
+						+ "AtomicRingBuffer: %s%n%n",
+				linkedBlockingQueueBenchmark,
+				arrayBlockingQueueBenchmark,
+				blockingRingBufferBenchmark,
+				atomicRingBufferBenchmark);
 	}
 }
