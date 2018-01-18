@@ -1,6 +1,5 @@
 # alxg2112 collections
 Some collections implementations (including concurrent ones), made just for fun.
-Key factor is implementation simplicity :)
 
 ## Currently existing collections
 
