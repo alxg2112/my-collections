@@ -1,5 +1,7 @@
 package com.github.alxg2112.testutils;
 
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -13,10 +15,39 @@ import com.github.alxg2112.collections.concurrent.ConcurrentBuffer;
  */
 public class Benchmark {
 
+	private static final NumberFormat NUMBER_FORMAT = NumberFormat.getNumberInstance(Locale.US);
+
 	private final int numberOfProducers;
 	private final int numberOfConsumers;
 	private final int elementsPerProducer;
 	private final int size;
+
+	public static class BenchmarkResult {
+
+		private final long timeElapsed;
+		private final long transactionsPerSecond;
+
+		public BenchmarkResult(long timeElapsed, long transactionsPerSecond) {
+			this.timeElapsed = timeElapsed;
+			this.transactionsPerSecond = transactionsPerSecond;
+		}
+
+		public long getTimeElapsed() {
+			return timeElapsed;
+		}
+
+		public long getTransactionsPerSecond() {
+			return transactionsPerSecond;
+		}
+
+		@Override
+		public String toString() {
+			return "BenchmarkResult{" +
+					"timeElapsed=" + NUMBER_FORMAT.format(timeElapsed) + "ms" +
+					", transactionsPerSecond=" + NUMBER_FORMAT.format(transactionsPerSecond) +
+					'}';
+		}
+	}
 
 	public Benchmark(int numberOfProducers, int numberOfConsumers, int elementsPerProducer, int size) {
 		this.numberOfProducers = numberOfProducers;
@@ -25,9 +56,11 @@ public class Benchmark {
 		this.size = size;
 	}
 
-	public long benchmark(ConcurrentBuffer<Object> buffer) throws ExecutionException, InterruptedException {
-		CountDownLatch leftToConsumeLatch = new CountDownLatch(elementsPerProducer * numberOfProducers);
-		ExecutorService executorService = Executors.newFixedThreadPool(numberOfProducers + numberOfConsumers);
+	public BenchmarkResult benchmark(ConcurrentBuffer<Object> buffer) throws ExecutionException, InterruptedException {
+		int numberOfElements = elementsPerProducer * numberOfProducers;
+		CountDownLatch leftToConsumeLatch = new CountDownLatch(numberOfElements);
+		int numberOfThreads = numberOfProducers + numberOfConsumers;
+		ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
 		Runnable producer = () -> {
 			for (int i = 0; i < elementsPerProducer; i++) {
 				Object newElement = new Object();
@@ -48,21 +81,23 @@ public class Benchmark {
 				leftToConsumeLatch.countDown();
 			}
 		};
-		long start = System.currentTimeMillis();
+		long startTimestamp = System.currentTimeMillis();
 		IntStream.range(0, numberOfProducers).forEach(num -> executorService.submit(producer));
 		IntStream.range(0, numberOfConsumers).forEach(num -> executorService.submit(consumer));
 		leftToConsumeLatch.await();
+		long timeElapsed = System.currentTimeMillis() - startTimestamp;
+		long transactionsPerSecond = numberOfElements / timeElapsed * 1000;
 		executorService.shutdownNow();
-		return System.currentTimeMillis() - start;
+		return new BenchmarkResult(timeElapsed, transactionsPerSecond);
 	}
 
 	@Override
 	public String toString() {
 		return "Benchmark{" +
-				"numberOfProducers=" + numberOfProducers +
-				", numberOfConsumers=" + numberOfConsumers +
-				", elementsPerProducer=" + elementsPerProducer +
-				", size=" + size +
+				"numberOfProducers=" + NUMBER_FORMAT.format(numberOfProducers) +
+				", numberOfConsumers=" + NUMBER_FORMAT.format(numberOfConsumers) +
+				", elementsPerProducer=" + NUMBER_FORMAT.format(elementsPerProducer) +
+				", size=" + NUMBER_FORMAT.format(size) +
 				'}';
 	}
 }
