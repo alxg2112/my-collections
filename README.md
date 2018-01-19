@@ -6,8 +6,8 @@ Some collections implementations (including concurrent ones), made just for fun.
 ### Thread safe
 | Collection | Description |
 | ------ | ------ |
-| `AtomicRingBuffer` | Lock-free [ring buffer] implementation. Has decent performance-to-memory footprint ratio.|
-| `BlockingRingBuffer` | Old school blocking implementation of [ring buffer]. Shows better performance than `ArrayBlockingQueue` and `LinkedBlockingQueue` when capacity is big enough. |
+| [AtomicRingBuffer] | Lock-free [ring buffer] implementation. Has decent performance-to-memory footprint ratio.|
+| [BlockingRingBuffer] | Old school blocking implementation of [ring buffer]. Shows better performance than `ArrayBlockingQueue` and `LinkedBlockingQueue` when capacity is big enough. |
 #### Benchmark
 ```
 Benchmark{numberOfProducers=1, numberOfConsumers=1, elementsPerProducer=1,000,000, size=16}
@@ -34,4 +34,7 @@ ArrayBlockingQueue: BenchmarkResult{timeElapsed=344ms, transactionsPerSecond=11,
 BlockingRingBuffer: BenchmarkResult{timeElapsed=350ms, transactionsPerSecond=11,428,000}
 AtomicRingBuffer: BenchmarkResult{timeElapsed=401ms, transactionsPerSecond=9,975,000}
 ```
-   [ring buffer]: <https://en.wikipedia.org/wiki/Circular_buffer>
+[ring buffer]: <https://en.wikipedia.org/wiki/Circular_buffer>
+[AtomicRingBuffer]: <https://github.com/alxg2112/my-collections/blob/master/src/main/java/com/github/alxg2112/collections/concurrent/AtomicRingBuffer.java>
+[BlockingRingBuffer]: <https://github.com/alxg2112/my-collections/blob/master/src/main/java/com/github/alxg2112/collections/concurrent/BlockingRingBuffer.java>
+   
