@@ -17,14 +17,12 @@ import java.util.concurrent.locks.ReentrantLock;
 public class BlockingRingBuffer<E> implements ConcurrentBuffer<E> {
 
 	private final E[] buffer;
-
-	private int writePos;
-	private int readPos;
-	private int elementCount;
-
 	private final Lock lock = new ReentrantLock();
 	private final Condition notEmpty = lock.newCondition();
 	private final Condition notFull = lock.newCondition();
+	private int writePos;
+	private int readPos;
+	private int elementCount;
 
 	@SuppressWarnings("unchecked")
 	public BlockingRingBuffer(int bufferSize) {
